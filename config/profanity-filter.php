@@ -71,9 +71,9 @@ return [
     | Custom Words File Path
     |--------------------------------------------------------------------------
     |
-    | The path to the custom words file.
+    | The path to the custom words file. support .json and .txt files.
     |
-    | example: base_path('resources/lang/en/profanity-words.php')
+    | example: base_path('resources/lang/en/profanity-words.txt')
     | example: storage_path('app/profanity-words.txt')
     | example: public_path('files/profanity-words.json')
     |
