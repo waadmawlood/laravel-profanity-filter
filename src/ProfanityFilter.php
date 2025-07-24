@@ -48,7 +48,8 @@ class ProfanityFilter
 
     protected function loadCustomWordsFromFileForLanguage(): void
     {
-        foreach ($this->config['custom_words_file_path'] as $lang => $filesPath) {
+        $customWordsFilePath = $this->config['custom_words_file_path'] ?? [];
+        foreach ($customWordsFilePath as $lang => $filesPath) {
             if (empty($filesPath)) {
                 continue;
             }
