@@ -68,6 +68,24 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Custom Words File Path
+    |--------------------------------------------------------------------------
+    |
+    | The path to the custom words file.
+    |
+    | example: base_path('resources/lang/en/profanity-words.php')
+    | example: storage_path('app/profanity-words.txt')
+    | example: public_path('files/profanity-words.json')
+    |
+    */
+    'custom_words_file_path' => [
+        'en' => [],
+        'fr' => [],
+        'ar' => [],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Character Substitutions
     |--------------------------------------------------------------------------
     |

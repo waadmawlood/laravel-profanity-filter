@@ -17,6 +17,7 @@ A powerful, flexible, and easy-to-use PHP Laravel package for detecting, filteri
 - **Laravel integration:** Seamless usage via Facade, Service Provider, and config
 - **Real-time configuration:** Update settings and word lists at runtime
 - **Extensible:** Easily add new languages, separators, or substitutions
+- **Import custom words from files:** Load additional profanity words from `.txt` or `.json` files per language
 
 ---
 
@@ -28,7 +29,6 @@ A powerful, flexible, and easy-to-use PHP Laravel package for detecting, filteri
 ## Installation
 
 ### Via Composer
-
 ```bash
 composer require waad/laravel-profanity-filter
 ```
@@ -140,6 +140,27 @@ $filteredText = ProfanityFilter::filter($text);
 echo $filteredText; // This is a test string with some profanity like **** and ****.
 ```
 
+
+### Using `importWordsFromFile` method
+You can import additional profanity words from a file (JSON or TXT) at runtime using the `importWordsFromFile` method. This is useful for dynamically extending the list of profane words without modifying the config file.
+
+```php
+use Waad\ProfanityFilter\Facades\ProfanityFilter;
+
+// Import words from a TXT file
+ProfanityFilter::importWordsFromFile(storage_path('app/profanity-words.txt'), 'en');
+
+// Import words from a JSON file
+ProfanityFilter::importWordsFromFile(storage_path('app/profanity-words.json'), 'en');
+
+$text = "This is foo and bar and alpha.";
+$filteredText = ProfanityFilter::filter($text);
+
+echo $filteredText; // This is *** and *** and *****.
+
+```
+
+
 ### Example All Methods
 
 ```php
@@ -178,8 +199,8 @@ composer test
 - [x] Add support for custom substitutions
 - [x] Add support for custom word lists
 - [x] Add support for custom word lists per language
+- [x] Add support for custom word from files (json, txt)
 - [ ] Add support for custom word lists in real time
-- [ ] Add support for custom word from files (json, txt)
 
 ## License
 

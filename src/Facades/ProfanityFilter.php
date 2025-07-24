@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool hasProfanity(string $text)
  * @method static string filter(string $text)
  * @method static array getProfanityWords(string $text)
+ * @method static \Waad\ProfanityFilter\ProfanityFilter importWordsFromFile(string $filePath, string $lang)
  *
  * @see \Waad\ProfanityFilter\ProfanityFilter
  */

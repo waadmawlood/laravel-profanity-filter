@@ -28,6 +28,9 @@ class ProfanityFilter
         foreach ($this->config['supported_languages'] as $lang) {
             $this->wordLists[$lang] = $this->loadWordsForLanguage($lang);
         }
+
+        // Load custom words from files
+        $this->loadCustomWordsFromFileForLanguage();
     }
 
     protected function loadWordsForLanguage(string $lang): array
@@ -41,6 +44,23 @@ class ProfanityFilter
         }
 
         return array_unique($words);
+    }
+
+    protected function loadCustomWordsFromFileForLanguage(): void
+    {
+        foreach ($this->config['custom_words_file_path'] as $lang => $filesPath) {
+            if (empty($filesPath)) {
+                continue;
+            }
+
+            if (is_array($filesPath)) {
+                foreach ($filesPath as $filePath) {
+                    $this->importWordsFromFile($filePath, $lang);
+                }
+            } else {
+                $this->importWordsFromFile($filesPath, $lang);
+            }
+        }
     }
 
     public function setConfig(array $config): self
@@ -291,6 +311,41 @@ class ProfanityFilter
         }
 
         return $found;
+    }
+
+    /**
+     * Import profanity words from a file (JSON or TXT) and merge into the word list for a language.
+     *
+     * @return $this
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function importWordsFromFile(string $filePath, string $lang): self
+    {
+        if (! file_exists($filePath) || ! is_readable($filePath)) {
+            return $this;
+        }
+
+        $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+        $words = [];
+        if ($ext === 'json') {
+            $json = file_get_contents($filePath);
+            $decoded = json_decode($json, true);
+            if (is_array($decoded)) {
+                $words = array_filter($decoded, 'is_string');
+            }
+        } elseif ($ext === 'txt') {
+            $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            $words = array_map('trim', $lines);
+        } else {
+            throw new \InvalidArgumentException("Unsupported file type: {$ext}. Only JSON and TXT are supported.");
+        }
+        if (! isset($this->wordLists[$lang])) {
+            $this->wordLists[$lang] = [];
+        }
+        $this->wordLists[$lang] = array_unique(array_merge($this->wordLists[$lang], $words));
+
+        return $this;
     }
 
     private function isLanguageMatchWithoutBoundaries(string $lang): bool
